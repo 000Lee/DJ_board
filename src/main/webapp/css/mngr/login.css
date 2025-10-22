@@ -1,0 +1,13 @@
+@charset "UTF-8";
+#login-container {
+	display: flex;
+	justify-content:center;
+	align-items:center;
+	height:100vh;
+}
+
+#loginForm {
+	width:350px;
+	padding:50px;
+	background-color:black;
+}

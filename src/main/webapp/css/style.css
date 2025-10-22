@@ -1,0 +1,138 @@
+html{font-family: 'Noto Sans KR', sans-serif;}
+body{font-family: 'Noto Sans KR', sans-serif;}
+
+/*select 스타일 색상 변경*/
+.k-button-solid-base{background-color: #E4EBF3!important;}
+.k-list-item.k-selected{background-color: #1A5089!important;}
+.k-list-item.k-hover, .k-list-item:hover{background-color: #E4EBF3!important;}
+
+/*캘린더 스타일 색상 변경*/
+.k-calendar>.k-header{background-color: #E4EBF3!important;}
+.k-calendar .k-footer .k-nav-today{color: #1A5089!important;}
+.k-calendar .k-calendar-td.k-selected .k-link, .k-calendar .k-calendar-td.k-state-selected .k-link{background-color: #1A5089!important; color: #fff!important;}
+.k-calendar .k-calendar-td.k-selected.k-hover .k-link, .k-calendar .k-calendar-td.k-selected:hover .k-link, .k-calendar .k-calendar-td.k-state-selected.k-state-hover .k-link, .k-calendar .k-calendar-td.k-state-selected:hover .k-link{background-color: #1A5089;}
+.k-calendar .k-today .k-link{color: #1A5089!important; box-shadow: inset 0 0 0 1px #1A5089!important;}
+
+/*라디오 스타일 색상 변경*/
+.k-radio:checked{color: #1A5089!important;}
+.k-radio:checked:focus{box-shadow:0 0 4px 0 rgb(26 80 137 /75%);}
+.k-radio:focus-within{box-shadow:0 0 4px 0 rgb(26 80 137 /75%);}
+
+/*체크박스 스타일 색상 변경*/
+.k-checkbox{color: #1A5089!important;}
+.k-checkbox:checked{color: #1A5089!important;}
+.k-checkbox:hover{color: #1A5089!important;}
+.k-checkbox:checked:focus{box-shadow:0 0 4px 0 rgb(26 80 137 /75%);}
+.k-checkbox:focus-within{border-color: #1A5089!important; box-shadow:0 0 4px 0 rgb(26 80 137 /75%);}
+
+/*grid table 스타일 색상 변경*/
+/*.k-grid .k-cell-inner>.k-link{background-color: #E4EBF3;}*/
+.k-pager-wrap{border-color: #E4EBF3; background-color: #E4EBF3;}
+.k-pager-wrap .k-link.k-state-selected{background-color: #1A5089;}
+.k-button-solid-base.k-active, .k-button-solid-base.k-selected, .k-button-solid-base:active{border-color: #1A5089!important;}
+.k-button-solid-base.k-focus, .k-button-solid-base:focus{border-color: #1A5089!important;}
+.k-picker:focus-within, .k-widget.k-picker:focus-within{border-color: #1A5089!important; box-shadow:0 0 4px 0 rgb(26 80 137 /75%)!important;}
+.k-drag-clue, .k-grid-header, .k-grouping-header, .k-header, .k-menu, .k-panelbar>.k-panelbar-header>.k-link, .k-progressbar, .k-state-highlight, .k-tabstrip, .k-tabstrip-items .k-item, .k-toolbar{background-color: #edf5ff!important;}
+.k-button-solid-base.k-focus, .k-button-solid-base:focus{border-color: #1A5089!important; box-shadow:0 0 4px 0 rgb(26 80 137 /75%)!important;}
+.k-filter-row th, .k-grid-header th.k-header{font-size:13px; text-align:center; vertical-align: middle;}
+.k-grid{font-size: 12px;}
+.k-grid-header th.k-header{font-size: 12px;}
+/*kendo 가운데 정렬*/
+.k-grid tbody, .k-grid tfoot, .k-grid thead {
+    text-align: center;
+}
+.k-input, .k-picker {font-size: 12px;}
+
+/*check all 폰트 크기, 넓이 변경*/
+.k-chip-label, .k-chip-text {font-size: 11px; width: 135px;}
+
+/* dropdownlist 폰트 크기 변경*/
+.k-list-item span.k-list-item-text {font-size: 12px;}
+
+/*드롭박스 스타일 색상 변경*/
+.k-picker, .k-widget.k-picker{background-color: #fff!important;}
+
+.k-scheduler-header-wrap .k-scheduler-table tbody tr th:last-child {color: blue;}
+.k-scheduler-header-wrap .k-scheduler-table tbody tr th:first-child {color: red;}
+.k-scheduler-content .k-scheduler-table tbody tr td:last-child {color: blue;}
+.k-scheduler-content .k-scheduler-table tbody tr td:first-child {color: red;}
+.k-scheduler-table td {vertical-align: top !important;}
+.k-grid-toolbar {justify-content: flex-end !important;}
+.k-editor-toolbar {display: flex; flex-direction: row; justify-content: flex-end;}
+/* 켄도그리드 헤더 가운데 정렬 */
+.k-grid .k-cell-inner>.k-link {justify-content: center;}
+
+/*table 스타일 색상 변경*/
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td{
+    border:1px solid rgba(0,0,0,.08);
+}
+
+/*table 선 색상*/
+.table-bordered > tbody > tr > td:first-child, .table-bordered > tfoot > tr > td:first-child{
+    border:1px solid #ebebeb;
+}
+
+/*treeview 폰트 크기 변경*/
+.k-treeview {font-size: 12px;}
+
+.logopanel{
+    background-image: url(../images/logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 200px;
+}
+.signpanel{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.signin{
+    top: 59%;
+    left: 67%;
+    transform: none;
+    background-color: transparent;
+}
+.infoBtn{width: 100px; margin: 10px 5px;}
+.infoBtn:hover{background-color: #5bc0de; color: #fff!important;}
+.table-bordered{border-collapse:collapse; border-left: 1px solid rgba(0,0,0,.08);}
+.tableThSt {background-color:#edf5ff; overflow: hidden; text-align:center; color:#313131;
+    padding: 6px 8px!important; font-weight: 400; white-space: nowrap; text-overflow: ellipsis;}
+.tableTdSt{text-align: center; background-color: #fff; color:#313131;padding: 6px 8px!important;}
+.panel-title{font-size:16px;}
+.popupTitleSt{font-weight: 600; line-height: 35px; font-size: 20px; margin-bottom: 5px;}
+
+input[type=file]::file-selector-button {
+    background-color: #E4EBF3;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 16px;
+}
+
+/* 네비게이션 */
+.title-road{text-align: right; font-size: 11px; color: #999999; margin-bottom: 5px;}
+
+/* 조회 조건 테이블 */
+.searchTable { background-color: white; border: 1px solid #dedfdf;}
+.searchTable > tbody > tr > th{ background-color: #00397f96; color: white; text-align: center;}
+
+/* 팝업창 테이블 */
+.popTable { background-color: white; margin-top: 10px;}
+.popTable > thead > tr > th, .popTable > tfoot > tr > th, .popTable > tfoot > tr > th{ background-color: #8fa1c04a;
+}
+
+/* 차량관리, 회의실 관리 테이블 */
+.manageTable { background-color: white;}
+.manageTable > tbody > tr > th {background-color: #8fa1c04a;}
+
+/* 팝업창 card-header */
+.pop-header {padding: 0px 0px 40px 0px; display:flex; justify-content: space-between; padding: 0px 0px 10px 0px; padding-right: 15px; padding-left: 15px; height: 50px; background-color: #00397f;}
+
+/* 팝업창 card-title */
+.title_NM {font-size:18px; color: #f1faff;}
+
+/* 팝업창 버튼 */
+.popButton {margin-top:10px; text-align:center;}
+
+/* 첨부파일 필드 숨기기 */
+.filebox input[type="file"] {position: absolute;width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0;}

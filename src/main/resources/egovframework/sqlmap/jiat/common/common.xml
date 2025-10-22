@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+
+    <insert id="insOneFileInfo" parameterType="map" >
+        /* insOneFileInfo */
+        INSERT INTO REHMAUC.DJ_FILE_INFO
+        (
+        FILE_CD,
+        FILE_UUID,
+        FILE_ORG_NAME,
+        FILE_PATH,
+        FILE_SIZE,
+        FILE_EXT,
+        EMP_SEQ,
+        REG_EMP_SEQ
+        )
+        VALUES
+        (
+        #{fileCd},
+        #{fileUUID},
+        #{fileOrgName},
+        #{filePath},
+        #{fileSize},
+        #{fileExt},
+        #{empSeq},
+        #{empSeq}
+        )
+
+        <selectKey keyProperty="file_no" resultType="Integer" order="BEFORE">
+            SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'REHMAUC' AND TABLE_NAME = 'DJ_FILE_INFO'
+        </selectKey>
+    </insert>
+
+    <update id="updOneFileInfo" parameterType="map">
+        /* updOneFileInfo */
+        UPDATE
+            REHMAUC.DJ_FILE_INFO
+        SET
+            FILE_UUID = #{fileUUID},
+            FILE_ORG_NAME = #{fileOrgName},
+            FILE_PATH = #{filePath},
+            FILE_SIZE = #{fileSize},
+            FILE_EXT = #{fileExt},
+            MOD_DATE = NOW(),
+            MOD_EMP_SEQ = #{empSeq}
+        WHERE
+            FILE_NO = #{fileNo}
+    </update>
+
+    <select id="getApprovalDocHwpFile" parameterType="map" resultType="map">
+        /* getApprovalDocHwpFile */
+        SELECT
+            FILE_NO,
+            FILE_CD,
+            FILE_UUID,
+            FILE_ORG_NAME,
+            FILE_PATH,
+            FILE_SIZE,
+            FILE_EXT,
+            EMP_SEQ,
+            REG_EMP_SEQ
+        FROM
+            REHMAUC.DJ_FILE_INFO
+        WHERE
+            FILE_NO = #{fileNo}
+    </select>
+
+    <insert id="insFileInfo" parameterType="list">
+        /* insFileInfo */
+
+        INSERT INTO REHMAUC.DJ_FILE_INFO
+        (
+        FILE_CD,
+        FILE_UUID,
+        FILE_ORG_NAME,
+        FILE_PATH,
+        FILE_SIZE,
+        FILE_EXT,
+        EMP_SEQ,
+        DOC_ID,
+        CONTENT_ID,
+        REG_EMP_SEQ,
+        FR_KEY
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.fileCd},
+            #{item.fileUUID},
+            #{item.fileOrgName},
+            #{item.filePath},
+            #{item.fileSize},
+            #{item.fileExt},
+            #{item.empSeq},
+            <choose>
+                <when test='item.docId != null and !"".equals(item.docId)'>#{item.docId},</when>
+                <when test='item.docId == null or "".equals(item.docId)'>null,</when>
+            </choose>
+            <choose>
+                <when test='item.contentId != null and !"".equals(item.contentId)'>#{item.contentId},</when>
+                <when test='item.contentId == null or "".equals(item.contentId)'>null,</when>
+            </choose>
+            #{item.empSeq},
+            <choose>
+                <when test='item.frKey != null and !"".equals(item.frKey)'>#{item.frKey}</when>
+                <when test='item.frKey == null or "".equals(item.frKey)'>0</when>
+            </choose>
+            )
+        </foreach>
+    </insert>
+
+    <select id="getContentFileOne" parameterType="map" resultType="map">
+        /* getContentFileOne */
+        SELECT
+            *
+        FROM
+            REHMAUC.DJ_FILE_INFO
+        WHERE
+            FILE_NO = #{fileNo}
+    </select>
+
+    <delete id="getContentFileDelOne" parameterType="map">
+        /* getContentFileDelOne */
+        DELETE FROM REHMAUC.DJ_FILE_INFO WHERE FILE_NO = #{fileNo}
+    </delete>
+</mapper>

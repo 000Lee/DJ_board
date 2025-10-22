@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="login">
+
+    <select id="actionLogin" resultType="egovframework.com.cms.intro.login.dto.LoginVO" parameterType="map">
+        /* actionLogin */
+        SELECT
+            HEI.LOGIN_ID AS id,
+            HEI.EMP_NAME_KR AS name,
+            HEI.EMP_SEQ AS uniqId,
+
+            HEI.DEPT_SEQ AS orgnztId,
+            HEI.DEPT_NAME AS orgnztNm,
+            CASE WHEN HDI.DEPT_LEVEL = 2 THEN (SELECT DEPT_SEQ FROM CAM_HR.DJ_DEPT_INFO DI WHERE HDI.PARENT_DEPT_SEQ = DI.DEPT_SEQ) ELSE HEI.DEPT_SEQ END AS deptId,
+            CASE WHEN HDI.DEPT_LEVEL = 2 THEN (SELECT DEPT_NAME FROM CAM_HR.DJ_DEPT_INFO DI WHERE HDI.PARENT_DEPT_SEQ = DI.DEPT_SEQ) ELSE HEI.DEPT_NAME END AS deptNm,
+            CASE WHEN HDI.DEPT_LEVEL = 2 THEN HEI.DEPT_SEQ ELSE "" END AS teamId,
+            CASE WHEN HDI.DEPT_LEVEL = 2 THEN HEI.DEPT_NAME ELSE "" END AS teamNm,
+
+            /* 직급 ex 수석연구원 */
+            HEI.POSITION_CODE AS positionCode,
+            HEI.POSITION_NAME AS positionNm,
+
+            /* 직책 ex 본부장 */
+            HEI.DUTY_CODE AS dutyCode,
+            HEI.DUTY_NAME AS dutyNm,
+
+            /* 등급 ex 1급 */
+            HEI.GRADE_CODE AS gradeCode,
+            HEI.GRADE_NAME AS gradeNm
+        FROM
+            CAM_HR.DJ_EMP_INFO HEI
+        LEFT JOIN
+            CAM_HR.DJ_DEPT_INFO HDI ON HEI.DEPT_SEQ = HDI.DEPT_SEQ
+        WHERE
+            LOGIN_ID = #{id}
+    </select>
+</mapper>

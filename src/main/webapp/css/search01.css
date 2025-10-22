@@ -1,0 +1,402 @@
+.header-search form input {
+    flex: 1;
+    min-width: 0;
+    height: 70px;
+    font-size: 18px;
+    font-weight: 600;
+    background: none;
+    padding: 0 15px 0 0;
+}
+.header-search form {
+    max-width: 885px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0 50px;
+    background: #f8f8f8;
+    border-radius: 100px;
+}
+.title-box h3 {
+    border: 0;
+    padding:0;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+
+
+
+@charset "utf-8"; /* CSS Document */
+/*통합검색*/
+.total_search_area {
+    margin-bottom: 20px;
+    color: #2e2e2e
+}
+
+.total_search_area input[type="text"] {
+    border: 1px solid #dadada;
+    height: 40px;
+    border-radius: 5px;
+    cursor: inherit;
+}
+
+.total_search_area button {
+    border: none;
+    background: transparent;
+}
+
+.total_search_area .search_box {
+    overflow: hidden;
+    margin: 0 auto;
+    border-top: 1px solid #1B1B1B;
+    border-bottom: 1px solid #1B1B1B;
+    background: #f8f8f8;
+    padding: 20px;
+    position: relative;
+}
+
+.total_search_area .search_box input[type="text"] {
+    width: 490px;
+    padding: 0 10px
+}
+
+.total_search_area .search_box .btn_search {
+    border: 1px solid #1e78d0;
+    border-radius: 5px;
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    background: #fff;
+    margin-left: 10px;
+    color: #1e78d0
+}
+
+.total_search_area label {
+    width: 110px;
+    display: inline-block
+}
+
+.total_search_area .search_detail_box {
+    border-bottom: 1px solid #1B1B1B;
+    padding: 20px;
+    overflow: auto;
+    display: none;
+}
+
+.total_search_area .search_detail_box .search_day {
+    float: left
+}
+
+.radio_box input[type=radio] + label {
+    position: relative;
+    display: inline-block;
+    margin: 1px;
+    padding: 0 0 0 30px;
+    color: #333;
+    line-height: 19px;
+    cursor: pointer;
+}
+
+.radio_box input[type=radio] + label::after, .radio_box input[type=radio] + label::before {
+    content: '';
+    position: absolute;
+}
+
+.radio_box input[type=radio] + label::after {
+    left: 0;
+    top: 0px;
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    border: 1px solid #404040;
+}
+
+.radio_box input[type=radio] + label.on::after, .radio_box input[type=radio]:checked + label::after {
+    border-color: #639d14;
+}
+
+.radio_box input[type=radio] + label.on::before, .radio_box input[type=radio]:checked + label::before {
+    left: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #639d14;
+}
+
+.radio_box .calendar_box {
+    display: inline-block;
+    border: 1px solid #dadada;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.radio_box #choicetime {
+    width: 380px;
+    margin-right: 140px
+}
+
+.total_search_area input.hasDatepicker {
+    border: none;
+    height: 38px;
+    padding: 10px;
+}
+
+.total_search_list {
+    font-size: 17px;
+    padding-bottom: 100px
+}
+
+.total_search_list .total_search_txt {
+    margin-top: 20px;
+    margin-bottom: 25px;
+    position: relative
+}
+
+.total_search_list .total_search_txt .sortbtn {
+    position: absolute;
+    right: 0;
+    top: 0
+}
+
+.total_search_list .total_search_txt .sortbtn button {
+    border: 1px solid rgba(38,38,38,0.8);
+    border-radius: 5px;
+    background: #fff;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 20px;
+    margin-left: 10px;
+    font-size: 14px
+}
+
+.total_search_list .total_search_txt .sortbtn button:hover {
+    border: 1px solid #1e78d0;
+    color: #1e78d0
+}
+
+.total_search_list .total_search_txt span {
+    color: #1e78d0
+}
+
+.total_search_list .total_search_txt.no_list {
+    padding-top: 155px;
+    text-align: center;
+    background-image: url('/images/web/img_nolist2.png');
+    background-repeat: no-repeat;
+    background-position: center top;
+}
+
+.total_search_list button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    font-size: 18px;
+}
+
+.total_search_list .more, .total_search_area .more {
+    display: block;
+    position: absolute;
+    right: 39px;
+    top: 0px;
+    padding-right: 15px;
+    color: #1e78d0;
+    font-size: 16px;
+}
+
+.total_search_list .more span:after,.total_search_area .more span:after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #1e78d0;
+    border-right: 2px solid #1e78d0;
+    display: inline-block;
+    transform: rotate(135deg);
+    position: absolute;
+    top: 25px;
+    left: 61px;
+}
+
+.total_search_area .more {
+    top: 35px;
+    padding-right: 25px
+}
+
+.total_search_area .more span:after {
+    top: 0px;
+    left: 72px;
+    transform: rotate( 135deg );
+}
+
+.total_search_area .more.open span:after {
+    transform: rotate( 315deg );
+    top: 5px;
+}
+
+.total .more.open span:after {
+    transform: rotate( 315deg );
+    top: 30px;
+}
+
+.division {
+    margin-bottom: 60px;
+}
+
+.list ul li {
+    border-bottom: 1px solid #dadada;
+    padding: 25px 0 15px;
+    line-height: 160%;
+}
+
+.list ul li:last-child {
+    border-bottom: 1px solid #636363
+}
+
+.list ul li .listit {
+    color: #2e2e2e;
+    font-weight: 500;
+    padding-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 25px;
+}
+
+.list ul li .listit em {
+    color: #1e78d0
+}
+
+.list ul li .liststit {
+    color: #8e8e8e;
+    font-size: 14px;
+    padding-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list ul li .listday {
+    font-size: 13px;
+    color: #000000
+}
+
+.total_search_list h2.total {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 65px;
+    background: #f8f8f8;
+    text-align: left;
+    padding-left: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.total_search_list h2.total span {
+    color: #666;
+    font-weight: 400;
+}
+
+.total_search_list h2.total span em {
+    font-style: normal;
+}
+
+.total_search_list h3.total {
+    padding: 20px 0;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.tabsearch .tabs {
+    padding: 35px 0
+}
+
+.tabsearch .tabs li {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 15px;
+    color: #434343;
+    padding: 5px 20px;
+    position: relative;
+    margin-right: 40px
+}
+
+.tabsearch .tabs li:after {
+    display: inline-block;
+    position: absolute;
+    content: '';
+    width: 1px;
+    height: 10px;
+    background: #9e9e9e;
+    right: -20px;
+    top: 7px;
+}
+
+.tabsearch .tabs li.active {
+    background: #fdb813;
+    color: #fff;
+    border-radius: 30px;
+}
+
+.tabsearch .gallay_list {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tabsearch .gallay_list li {
+    border: 1px solid #c5c5c5;
+    padding: 30px 25px 0;
+    box-sizing: border-box;
+    height: 150px;
+    flex: 1;
+    margin-right: 18px;
+    max-width: 414px;
+}
+
+.tabsearch .gallay_list li:last-child {
+    margin-right: 0
+}
+
+.tabsearch .gallay_list .galltit {
+    font-size: 15px;
+    padding-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tabsearch .gallay_list .galltype {
+    color: #1e78d0;
+    font-size: 13px;
+    padding-bottom: 30px
+}
+
+.tabsearch .gallay_list .gallday {
+    font-size: 14px
+}
+
+.total_search_list .more2 span:after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #1e78d0;
+    border-right: 2px solid #1e78d0;
+    display: inline-block;
+    transform: rotate(45deg);
+    position: absolute;
+    left: 61px;
+}
+
+.total_search_list .more2 {
+    display: block;
+    position: absolute;
+    right: 39px;
+    top: 25px;
+    padding-right: 15px;
+    color: #1e78d0;
+    font-size: 16px;
+}

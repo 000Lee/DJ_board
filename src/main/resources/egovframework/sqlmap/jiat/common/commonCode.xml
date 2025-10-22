@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="commonCode">
+    <select id="getCmGroupCodeList" resultType="map" parameterType="map">
+        /* getCmGroupCodeList */
+
+        SELECT
+            CCG.*,
+            CCG.CM_GROUP_CODE AS CM_GROUP_CODE_TEXT
+        FROM
+            DJ_JIAT.DJ_COM_GROUP_CODE CCG
+        WHERE
+            1=1
+        AND
+            ACTIVE = 'Y'
+        <if test='cmGroupCode != null and !"".equals(cmGroupCode)'>
+        AND
+            CCG.CM_GROUP_CODE LIKE CONCAT('%',#{cmGroupCode},'%')
+        </if>
+        <if test='dropDown != null and !"".equals(dropDown) and "Y".equals(dropDown)'>
+        GROUP BY
+            CCG.CM_GROUP_CODE
+        </if>
+        ORDER BY SORT ASC
+    </select>
+
+    <select id="getCmGroupCodeInfo" resultType="map" parameterType="map">
+        /* getCmGroupCodeInfo */
+        SELECT
+            CCG.*,
+            CCG.CM_GROUP_CODE AS CM_GROUP_CODE_TEXT
+        FROM
+            DJ_JIAT.DJ_COM_GROUP_CODE CCG
+        WHERE
+            CCG.CM_GROUP_CODE_ID = #{cmGroupCodeId}
+    </select>
+
+    <select id="getCmCodeList" resultType="map" parameterType="map">
+        /* getCmCodeList */
+
+        SELECT
+            *
+        FROM
+            DJ_JIAT.DJ_COM_CODE CC
+        WHERE
+            1=1
+        AND
+            ACTIVE = 'Y'
+        <if test='cmGroupCodeId != null and !"".equals(cmGroupCodeId)'>
+            <choose>
+                <when test='"1".equals(searchType)'>
+                    AND CC.CM_GROUP_CODE_ID IN
+                    <foreach collection="cmGroupCodeId" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </when>
+                <otherwise>
+                    AND
+                    CC.CM_GROUP_CODE_ID = #{cmGroupCodeId}
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY CC.SORT
+    </select>
+
+    <select id="getCustomCodeList" resultType="map" parameterType="map">
+        /* getCustomCodeList */
+        CALL DJ_JIAT.${procedureName};
+    </select>
+
+    <select id="getCmCodeInfo" parameterType="map" resultType="map">
+        /* getCmCodeInfo */
+        SELECT
+            CC.*
+        FROM
+            DJ_JIAT.DJ_COM_CODE CC
+        WHERE
+            1=1
+        <if test='cmGroupCodeId != null and !"".equals(cmGroupCodeId)'>
+        AND
+            CC.CM_GROUP_CODE_ID = #{cmGroupCodeId}
+        </if>
+        <if test='cmCodeId != null and !"".equals(cmCodeId)'>
+        AND
+            CC.CM_CODE_ID = #{cmCodeId}
+        </if>
+        <if test='cmCode != null and !"".equals(cmCode)'>
+        AND
+            CC.CM_CODE = #{cmCode}
+        </if>
+    </select>
+
+    <select id="getCodeValidationChk" parameterType="map" resultType="int">
+        /* getCodeValidationChk */
+        SELECT
+            COUNT(*)
+        FROM
+            DJ_JIAT.DJ_COM_CODE
+        WHERE
+            1=1
+        AND
+            ACTIVE = 'Y'
+        AND
+            CM_GROUP_CODE_ID = #{cmGroupCodeId}
+        AND
+            CM_CODE = #{cmCode}
+    </select>
+
+    <insert id="setCmGroupCodeSave" parameterType="map">
+        /* setCmCodeSave */
+
+        INSERT INTO DJ_JIAT.DJ_COM_GROUP_CODE
+        (
+            CM_GROUP_CODE, CM_GROUP_CODE_NM, CM_GROUP_CODE_DESC, REG_EMP_SEQ
+        )
+        VALUES
+            (
+                #{cmGroupCode}, #{cmGroupCodeNm}, #{cmGroupCodeDesc}, #{empSeq}
+            )
+    </insert>
+
+    <insert id="setCmCodeSave" parameterType="map">
+        /* setCmCodeSave */
+
+        INSERT INTO DJ_JIAT.DJ_COM_CODE
+        (
+            CM_CODE, CM_GROUP_CODE_ID, CM_CODE_NM, CM_CODE_DESC, REG_EMP_SEQ
+        )
+        VALUES
+            (
+                #{cmCode}, #{cmGroupCodeId}, #{cmCodeNm}, #{cmCodeDesc}, #{empSeq}
+            )
+    </insert>
+
+    <update id="setCmGroupCodeUpdate" parameterType="map">
+        /* setCmCodeUpdate */
+        UPDATE
+            DJ_JIAT.DJ_COM_GROUP_CODE
+        SET
+            CM_GROUP_CODE = #{cmGroupCode},
+            CM_GROUP_CODE_NM = #{cmGroupCodeNm},
+            CM_GROUP_CODE_DESC = #{cmGroupCodeDesc},
+            MOD_EMP_SEQ = #{empSeq},
+            MOD_DATE = NOW()
+        WHERE
+            CM_GROUP_CODE_ID = #{cmGroupCodeId}
+    </update>
+
+    <update id="setCmCodeUpdate" parameterType="map">
+        /* setCmCodeUpdate */
+        UPDATE
+            DJ_JIAT.DJ_COM_CODE
+        SET
+            CM_CODE = #{cmCode},
+            CM_CODE_NM = #{cmCodeNm},
+            CM_CODE_DESC = #{cmCodeDesc},
+            MOD_EMP_SEQ = #{empSeq},
+            MOD_DATE = NOW()
+        WHERE
+            CM_CODE_ID = #{cmCodeId}
+    </update>
+
+    <update id="setCmCodeDel" parameterType="map">
+        /* setCmCodeDel */
+        UPDATE
+            DJ_JIAT.DJ_COM_CODE
+        SET
+            ACTIVE = 'N',
+            MOD_EMP_SEQ = #{empSeq},
+            MOD_DATE = NOW()
+        WHERE
+            CM_CODE_ID = #{cmCodeId}
+    </update>
+</mapper>

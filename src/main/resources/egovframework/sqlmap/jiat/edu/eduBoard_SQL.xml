@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eduBoard">
+
+    <!-- 게시글 목록 조회 (전체) -->
+    <select id="selectList" resultType="egovframework.com.cms.edu.model.EduBoardVO">
+        SELECT 
+            id,
+            title,
+            content,
+            writer,
+            created_at as createdAt,
+            views,
+            is_secret as isSecret,
+            secret_password as secretPassword
+        FROM edu_board
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 게시글 목록 조회 (페이징) -->
+    <select id="selectListWithPaging" parameterType="egovframework.com.cms.edu.model.PagingVO" 
+            resultType="egovframework.com.cms.edu.model.EduBoardVO">
+        SELECT 
+            id,
+            title,
+            content,
+            writer,
+            created_at as createdAt,
+            views,
+            is_secret as isSecret,
+            secret_password as secretPassword
+        FROM edu_board
+        ORDER BY created_at DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 전체 게시글 수 조회 -->
+    <select id="selectTotalCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM edu_board
+    </select>
+
+    <!-- 게시글 상세 조회 -->
+    <select id="selectDetail" parameterType="long" resultType="egovframework.com.cms.edu.model.EduBoardVO">
+        SELECT 
+            id,
+            title,
+            content,
+            writer,
+            created_at as createdAt,
+            views,
+            is_secret as isSecret,
+            secret_password as secretPassword
+        FROM edu_board
+        WHERE id = #{id}
+    </select>
+
+    <!-- 게시글 등록 -->
+    <insert id="insert" parameterType="egovframework.com.cms.edu.model.EduBoardVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO edu_board (
+            title,
+            content,
+            writer,
+            created_at,
+            views,
+            is_secret,
+            secret_password
+        ) VALUES (
+            #{title},
+            #{content},
+            #{writer},
+            NOW(),
+            0,
+            #{isSecret},
+            #{secretPassword}
+        )
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="update" parameterType="egovframework.com.cms.edu.model.EduBoardVO">
+        UPDATE edu_board
+        SET 
+            title = #{title},
+            content = #{content},
+            writer = #{writer},
+            is_secret = #{isSecret},
+            secret_password = #{secretPassword}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM edu_board
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="updateViews" parameterType="long">
+        UPDATE edu_board
+        SET views = views + 1
+        WHERE id = #{id}
+    </update>
+
+    <!-- 이전글 조회 -->
+    <select id="selectPrevPost" parameterType="long" resultType="egovframework.com.cms.edu.model.EduBoardVO">
+        SELECT 
+            id,
+            title,
+            content,
+            writer,
+            created_at as createdAt,
+            views,
+            is_secret as isSecret,
+            secret_password as secretPassword
+        FROM edu_board
+        WHERE id &lt; #{id}
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 다음글 조회 -->
+    <select id="selectNextPost" parameterType="long" resultType="egovframework.com.cms.edu.model.EduBoardVO">
+        SELECT 
+            id,
+            title,
+            content,
+            writer,
+            created_at as createdAt,
+            views,
+            is_secret as isSecret,
+            secret_password as secretPassword
+        FROM edu_board
+        WHERE id &gt; #{id}
+        ORDER BY id ASC
+        LIMIT 1
+    </select>
+
+</mapper>
