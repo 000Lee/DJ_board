@@ -1,19 +1,27 @@
 package egovframework.com.cms.edu.controller;
 
 import egovframework.com.cms.edu.model.EduBoardVO;
+import egovframework.com.cms.edu.model.EduFileVO;
 import egovframework.com.cms.edu.model.PagingVO;
 import egovframework.com.cms.edu.model.UserVO;
 import egovframework.com.cms.edu.model.CommentVO;
 import egovframework.com.cms.edu.service.TestService;
 import egovframework.com.cms.edu.service.UserService;
 import egovframework.com.cms.edu.service.CommentService;
+import egovframework.com.cms.edu.util.FileUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 @Controller
@@ -28,6 +36,9 @@ public class TestController {
     
     @Resource(name = "commentService")
     private CommentService commentService;
+    
+    @Resource
+    private FileUtil fileUtil;
 
     // 게시판 목록 (페이징, 정렬, 검색 적용)
     @RequestMapping("/start.do")
@@ -108,6 +119,10 @@ public class TestController {
             model.addAttribute("nextPost", nextPost); 
             model.addAttribute("loginUser", loginUser);
             
+            // 첨부파일 목록 조회
+            List<EduFileVO> files = testService.getFilesByBoardId(id);
+            model.addAttribute("files", files);
+            
             // 댓글 목록 조회
             List<CommentVO> comments = commentService.getCommentsByBoardId(id);
             model.addAttribute("comments", comments);
@@ -135,7 +150,9 @@ public class TestController {
 
     // 게시글 등록
     @RequestMapping(value = "/insert.do", method = RequestMethod.POST)
-    public String insert(@ModelAttribute EduBoardVO vo, HttpSession session) {
+    public String insert(@ModelAttribute EduBoardVO vo, 
+                        @RequestParam(value = "files", required = false) MultipartFile[] files,
+                        HttpSession session) {
         System.out.println("=== INSERT 메서드 시작 ===");
         
         // 로그인 체크
@@ -151,16 +168,39 @@ public class TestController {
             // 로그인한 사용자의 이름을 작성자로 설정
             vo.setWriter(loginUser.getName());
             
+            // 게시글 먼저 등록
+            testService.insert(vo);
+            System.out.println("게시글 DB 저장 완료, ID: " + vo.getId());
+            
+            // 파일 업로드 처리 (다중 파일)
+            if (files != null && files.length > 0) {
+                for (MultipartFile file : files) {
+                    if (file != null && !file.isEmpty()) {
+                        String filePath = fileUtil.saveFile(file);
+                        
+                        // 파일 정보를 EduFileVO로 생성
+                        EduFileVO fileVO = new EduFileVO();
+                        fileVO.setBoardId(vo.getId());
+                        fileVO.setOriginalName(file.getOriginalFilename());
+                        fileVO.setSavedName(filePath.substring(filePath.lastIndexOf("/") + 1));
+                        fileVO.setFilePath(filePath);
+                        fileVO.setFileSize(file.getSize());
+                        
+                        // 파일 정보 DB 저장
+                        testService.insertFile(fileVO);
+                        System.out.println("파일 업로드 완료: " + file.getOriginalFilename());
+                    }
+                }
+            }
+            
             // 디버깅 로그
-            System.out.println("=== 게시글 등록 ===");
+            System.out.println("=== 게시글 등록 완료 ===");
             System.out.println("제목: " + vo.getTitle());
             System.out.println("내용: " + vo.getContent());
             System.out.println("작성자: " + vo.getWriter());
             System.out.println("비밀글 여부: " + vo.getIsSecret());
             System.out.println("비밀번호: " + vo.getSecretPassword());
             
-            testService.insert(vo);
-            System.out.println("DB 저장 완료");
             return "redirect:/edu/start.do";
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,6 +231,11 @@ public class TestController {
             
             model.addAttribute("board", board);
             model.addAttribute("loginUser", loginUser);
+            
+            // 첨부파일 목록 조회
+            List<EduFileVO> files = testService.getFilesByBoardId(id);
+            model.addAttribute("files", files);
+            
             return "edu/edit";
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,7 +245,10 @@ public class TestController {
 
     // 게시글 수정
     @RequestMapping(value = "/update.do", method = RequestMethod.POST)
-    public String update(@ModelAttribute EduBoardVO vo, HttpSession session, Model model) {
+    public String update(@ModelAttribute EduBoardVO vo, 
+                        @RequestParam(value = "files", required = false) MultipartFile[] files,
+                        @RequestParam(value = "deleteFileIds", required = false) Long[] deleteFileIds,
+                        HttpSession session, Model model) {
         // 로그인 체크
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
         if (loginUser == null) {
@@ -225,13 +273,48 @@ public class TestController {
                 vo.setSecretPassword(originalBoard.getSecretPassword());
             }
             
+            // 게시글 정보 수정
+            testService.update(vo);
+            
+            // 파일 삭제 처리
+            if (deleteFileIds != null && deleteFileIds.length > 0) {
+                for (Long fileId : deleteFileIds) {
+                    EduFileVO fileVO = testService.getFileById(fileId);
+                    if (fileVO != null) {
+                        // 서버에서 파일 삭제
+                        fileUtil.deleteFile(fileVO.getFilePath());
+                        // DB에서 파일 정보 삭제
+                        testService.deleteFile(fileId);
+                    }
+                }
+            }
+            
+            // 새 파일 업로드 처리
+            if (files != null && files.length > 0) {
+                for (MultipartFile file : files) {
+                    if (file != null && !file.isEmpty()) {
+                        String filePath = fileUtil.saveFile(file);
+                        
+                        // 파일 정보를 EduFileVO로 생성
+                        EduFileVO fileVO = new EduFileVO();
+                        fileVO.setBoardId(vo.getId());
+                        fileVO.setOriginalName(file.getOriginalFilename());
+                        fileVO.setSavedName(filePath.substring(filePath.lastIndexOf("/") + 1));
+                        fileVO.setFilePath(filePath);
+                        fileVO.setFileSize(file.getSize());
+                        
+                        // 파일 정보 DB 저장
+                        testService.insertFile(fileVO);
+                        System.out.println("파일 업로드 완료: " + file.getOriginalFilename());
+                    }
+                }
+            }
+            
             // 디버깅 로그
-            System.out.println("=== 게시글 수정 ===");
+            System.out.println("=== 게시글 수정 완료 ===");
             System.out.println("제목: " + vo.getTitle());
             System.out.println("비밀글 여부: " + vo.getIsSecret());
             System.out.println("비밀번호: " + vo.getSecretPassword());
-            
-            testService.update(vo);
             return "redirect:/edu/detail.do?id=" + vo.getId();
         } catch (Exception e) {
             e.printStackTrace();
@@ -441,6 +524,52 @@ public class TestController {
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/edu/detail.do?id=" + boardId + "&error=true";
+        }
+    }
+    
+    // 파일 다운로드
+    @RequestMapping("/download.do")
+    public void downloadFile(@RequestParam Long fileId, HttpServletResponse response) {
+        try {
+            // 파일 정보 조회
+            EduFileVO fileVO = testService.getFileById(fileId);
+            
+            if (fileVO == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
+                return;
+            }
+            
+            // 파일 전체 경로
+            String fullPath = fileUtil.getFullPath(fileVO.getFilePath());
+            File file = new File(fullPath);
+            
+            if (!file.exists()) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
+                return;
+            }
+            
+            // 파일명 인코딩 (한글 파일명 지원)
+            String fileName = URLEncoder.encode(fileVO.getOriginalName(), "UTF-8").replaceAll("\\+", "%20");
+            
+            // 응답 헤더 설정
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setContentLength((int) file.length());
+            
+            // 파일 전송
+            try (FileInputStream fis = new FileInputStream(file);
+                 OutputStream os = response.getOutputStream()) {
+                
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, bytesRead);
+                }
+                os.flush();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

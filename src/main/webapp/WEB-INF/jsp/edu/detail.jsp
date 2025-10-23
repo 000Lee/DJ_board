@@ -77,6 +77,26 @@
 ${board.content}
         </div>
         
+        <!-- 첨부파일 다운로드 (다중 파일) -->
+        <c:if test="${not empty files}">
+            <div style="padding: 15px; background: #f0f8ff; border: 1px solid #d0e8ff; border-radius: 5px; margin-bottom: 20px;">
+                <strong>📎 첨부파일 (${files.size()}개)</strong>
+                <div style="margin-top: 10px;">
+                    <c:forEach var="file" items="${files}" varStatus="status">
+                        <div style="margin-bottom: 8px; padding: 8px; background: white; border-radius: 3px;">
+                            <a href="/edu/download.do?fileId=${file.id}" 
+                               style="text-decoration: none; color: #007bff; font-size: 14px;">
+                                📄 ${file.originalName}
+                            </a>
+                            <span style="color: #666; font-size: 12px; margin-left: 10px;">
+                                (${file.fileSize} bytes)
+                            </span>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </c:if>
+        
         <div class="btn-group">
             <%-- 관리자이거나 작성자인 경우 수정/삭제 버튼 표시 --%>
             <c:if test="${not empty loginUser and (loginUser.isAdmin or loginUser.name eq board.writer)}">

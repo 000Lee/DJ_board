@@ -1,6 +1,7 @@
 package egovframework.com.cms.edu.service.impl;
 
 import egovframework.com.cms.edu.model.EduBoardVO;
+import egovframework.com.cms.edu.model.EduFileVO;
 import egovframework.com.cms.edu.model.PagingVO;
 import egovframework.com.cms.edu.repository.EduBoardDAO;
 import egovframework.com.cms.edu.service.TestService;
@@ -64,5 +65,32 @@ public class TestServiceImpl implements TestService {
     @Override
     public EduBoardVO getNextPost(Long id) {
         return eduBoardDAO.selectNextPost(id);
+    }
+    
+    // ========== 파일 관련 메서드들 ==========
+    
+    @Override
+    public List<EduFileVO> getFilesByBoardId(Long boardId) {
+        return eduBoardDAO.selectFilesByBoardId(boardId);
+    }
+    
+    @Override
+    public void insertFile(EduFileVO fileVO) {
+        eduBoardDAO.insertFile(fileVO);
+    }
+    
+    @Override
+    public void deleteFile(Long fileId) {
+        eduBoardDAO.deleteFile(fileId);
+    }
+    
+    @Override
+    public void deleteFilesByBoardId(Long boardId) {
+        eduBoardDAO.deleteFilesByBoardId(boardId);
+    }
+    
+    @Override
+    public EduFileVO getFileById(Long fileId) {
+        return eduBoardDAO.selectFileById(fileId);
     }
 }

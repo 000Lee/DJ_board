@@ -195,4 +195,66 @@
         LIMIT 1
     </select>
 
+    <!-- 파일 관련 쿼리들 -->
+    
+    <!-- 게시글의 첨부파일 목록 조회 -->
+    <select id="selectFilesByBoardId" parameterType="long" resultType="egovframework.com.cms.edu.model.EduFileVO">
+        SELECT 
+            id,
+            board_id as boardId,
+            original_name as originalName,
+            saved_name as savedName,
+            file_path as filePath,
+            file_size as fileSize,
+            upload_date as uploadDate
+        FROM edu_file
+        WHERE board_id = #{boardId}
+        ORDER BY upload_date ASC
+    </select>
+
+    <!-- 파일 정보 등록 -->
+    <insert id="insertFile" parameterType="egovframework.com.cms.edu.model.EduFileVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO edu_file (
+            board_id,
+            original_name,
+            saved_name,
+            file_path,
+            file_size,
+            upload_date
+        ) VALUES (
+            #{boardId},
+            #{originalName},
+            #{savedName},
+            #{filePath},
+            #{fileSize},
+            NOW()
+        )
+    </insert>
+
+    <!-- 파일 삭제 -->
+    <delete id="deleteFile" parameterType="long">
+        DELETE FROM edu_file
+        WHERE id = #{fileId}
+    </delete>
+
+    <!-- 게시글의 모든 파일 삭제 -->
+    <delete id="deleteFilesByBoardId" parameterType="long">
+        DELETE FROM edu_file
+        WHERE board_id = #{boardId}
+    </delete>
+
+    <!-- 파일 정보 조회 -->
+    <select id="selectFileById" parameterType="long" resultType="egovframework.com.cms.edu.model.EduFileVO">
+        SELECT 
+            id,
+            board_id as boardId,
+            original_name as originalName,
+            saved_name as savedName,
+            file_path as filePath,
+            file_size as fileSize,
+            upload_date as uploadDate
+        FROM edu_file
+        WHERE id = #{fileId}
+    </select>
+
 </mapper>

@@ -1,6 +1,7 @@
 package egovframework.com.cms.edu.service;
 
 import egovframework.com.cms.edu.model.EduBoardVO;
+import egovframework.com.cms.edu.model.EduFileVO;
 import egovframework.com.cms.edu.model.PagingVO;
 import java.util.List;
 
@@ -15,4 +16,11 @@ public interface TestService {
     void updateViews(Long id);
     EduBoardVO getPrevPost(Long id);
     EduBoardVO getNextPost(Long id);
+    
+    // 파일 관련 메서드들
+    List<EduFileVO> getFilesByBoardId(Long boardId);
+    void insertFile(EduFileVO fileVO);
+    void deleteFile(Long fileId);
+    void deleteFilesByBoardId(Long boardId);
+    EduFileVO getFileById(Long fileId);
 }

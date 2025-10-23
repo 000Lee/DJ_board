@@ -28,7 +28,7 @@
     </c:if>
     
     <c:if test="${not empty board}">
-        <form action="/edu/update.do" method="post">
+        <form action="/edu/update.do" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" value="${board.id}">
             
             <div class="form-group">
@@ -72,6 +72,34 @@
                     <small style="color: #666; font-size: 12px;">※ 공지사항은 게시판 상단에 고정됩니다.</small>
                 </div>
             </c:if>
+            
+            <!-- 기존 파일 정보 (다중 파일) -->
+            <c:if test="${not empty files}">
+                <div class="form-group">
+                    <label>현재 첨부파일 (${files.size()}개)</label>
+                    <div style="padding: 10px; background: #f9f9f9; border-radius: 5px;">
+                        <c:forEach var="file" items="${files}" varStatus="status">
+                            <div style="margin-bottom: 8px; padding: 8px; background: white; border-radius: 3px;">
+                                <span>📄 ${file.originalName}</span>
+                                <span style="color: #666; font-size: 12px; margin-left: 10px;">
+                                    (${file.fileSize} bytes)
+                                </span>
+                                <label style="margin-left: 20px; color: #dc3545;">
+                                    <input type="checkbox" name="deleteFileIds" value="${file.id}">
+                                    삭제
+                                </label>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
+            
+            <!-- 새 파일 첨부 (다중 파일) -->
+            <div class="form-group">
+                <label for="files">파일 첨부 ${not empty files ? '(추가 파일)' : ''}</label>
+                <input type="file" id="files" name="files" multiple style="border: 1px solid #ddd; padding: 8px; border-radius: 5px;">
+                <small style="color: #666; font-size: 12px;">※ 여러 파일을 한 번에 선택할 수 있습니다. 최대 10MB까지 업로드 가능합니다.</small>
+            </div>
             
             <div class="form-group">
                 <button type="submit" class="btn">수정</button>

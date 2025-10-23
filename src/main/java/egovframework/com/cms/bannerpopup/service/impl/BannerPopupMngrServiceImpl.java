@@ -1,6 +1,6 @@
 package egovframework.com.cms.bannerpopup.service.impl;
 
-import dev_jitsu.MainLib;
+// import dev_jitsu.MainLib;  // TODO: MainLib 클래스 누락으로 임시 주석
 import egovframework.com.cms.bannerpopup.repository.BannerPopupMngrRepository;
 import egovframework.com.cms.bannerpopup.service.BannerPopupMngrService;
 import egovframework.com.cms.common.repository.CommonRepository;
@@ -70,6 +70,8 @@ public class BannerPopupMngrServiceImpl implements BannerPopupMngrService {
         if(params.get("gubun").equals("update")){
             bannerPopupMngrRepository.setBannerPopupUpdate(params);
             if (file.length > 0) {
+                // TODO: MainLib 누락으로 임시 주석 처리
+                /*
                 MainLib mainLib = new MainLib();
                 List<Map<String, Object>> list = mainLib.multiFileUpload(file, listFilePath(params, server_dir));
                 for (int i = 0; i < list.size(); i++) {
@@ -80,10 +82,13 @@ public class BannerPopupMngrServiceImpl implements BannerPopupMngrService {
                     list.get(i).put("fileExt", list.get(i).get("orgFilename").toString().split("[.]")[1]);
                 }
                 bannerPopupMngrRepository.setBannerPopupInsertFile(list);
+                */
             }
         }else {
             bannerPopupMngrRepository.setBannerPopupInsert(params);
             if (file.length > 0) {
+                // TODO: MainLib 누락으로 임시 주석 처리
+                /*
                 MainLib mainLib = new MainLib();
                 List<Map<String, Object>> list = mainLib.multiFileUpload(file, listFilePath(params, server_dir));
                 for (int i = 0; i < list.size(); i++) {
@@ -94,6 +99,7 @@ public class BannerPopupMngrServiceImpl implements BannerPopupMngrService {
                     list.get(i).put("fileExt", list.get(i).get("orgFilename").toString().split("[.]")[1]);
                 }
                 bannerPopupMngrRepository.setBannerPopupInsertFile(list);
+                */
             }
         }
 

@@ -1,6 +1,7 @@
 package egovframework.com.cms.edu.repository;
 
 import egovframework.com.cms.edu.model.EduBoardVO;
+import egovframework.com.cms.edu.model.EduFileVO;
 import egovframework.com.cms.edu.model.PagingVO;
 import org.springframework.stereotype.Repository;
 
@@ -84,5 +85,42 @@ public class EduBoardDAO {
      */
     public EduBoardVO selectNextPost(Long id) {
         return sqlSession.selectOne(NAMESPACE + ".selectNextPost", id);
+    }
+
+    // ========== 파일 관련 메서드들 ==========
+
+    /**
+     * 게시글의 첨부파일 목록 조회
+     */
+    public List<EduFileVO> selectFilesByBoardId(Long boardId) {
+        return sqlSession.selectList(NAMESPACE + ".selectFilesByBoardId", boardId);
+    }
+
+    /**
+     * 파일 정보 등록
+     */
+    public int insertFile(EduFileVO fileVO) {
+        return sqlSession.insert(NAMESPACE + ".insertFile", fileVO);
+    }
+
+    /**
+     * 파일 삭제
+     */
+    public int deleteFile(Long fileId) {
+        return sqlSession.delete(NAMESPACE + ".deleteFile", fileId);
+    }
+
+    /**
+     * 게시글의 모든 파일 삭제
+     */
+    public int deleteFilesByBoardId(Long boardId) {
+        return sqlSession.delete(NAMESPACE + ".deleteFilesByBoardId", boardId);
+    }
+
+    /**
+     * 파일 정보 조회
+     */
+    public EduFileVO selectFileById(Long fileId) {
+        return sqlSession.selectOne(NAMESPACE + ".selectFileById", fileId);
     }
 }

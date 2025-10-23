@@ -27,7 +27,7 @@
         <div class="error">게시글 등록 중 오류가 발생했습니다.</div>
     </c:if>
     
-    <form action="/edu/insert.do" method="post">
+    <form action="/edu/insert.do" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" id="title" name="title" required>
@@ -69,6 +69,13 @@
                 <small style="color: #666; font-size: 12px;">※ 공지사항은 게시판 상단에 고정됩니다.</small>
             </div>
         </c:if>
+        
+        <!-- 파일 첨부 (다중 파일) -->
+        <div class="form-group">
+            <label for="files">파일 첨부</label>
+            <input type="file" id="files" name="files" multiple style="border: 1px solid #ddd; padding: 8px; border-radius: 5px;">
+            <small style="color: #666; font-size: 12px;">※ 여러 파일을 한 번에 선택할 수 있습니다. 최대 10MB까지 업로드 가능합니다.</small>
+        </div>
         
         <div class="form-group">
             <button type="submit" class="btn">등록</button>

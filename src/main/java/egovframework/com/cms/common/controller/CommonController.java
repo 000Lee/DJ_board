@@ -1,7 +1,7 @@
 package egovframework.com.cms.common.controller;
 
 import com.google.gson.Gson;
-import dev_jitsu.MainLib;
+// import dev_jitsu.MainLib;  // TODO: MainLib 클래스 누락으로 임시 주석
 import egovframework.com.cms.common.service.CommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +35,10 @@ public class CommonController {
     private String BASE_DIR;
 
 
+    // TODO: MainLib 누락으로 전체 메서드 임시 주석
+    /*
     @RequestMapping(value = "/common/multiFileUpload.do", method = RequestMethod.POST)
-    public String multiFileUpload(@RequestParam("fileNm") MultipartFile[] mpf, @RequestParam Map<String, Object> params){
+    public String multiFileUpload(@RequestParam("fileNm") MultipartFile[] mpf, @requestParam Map<String, Object> params){
 
         LocalDate now = LocalDate.now();
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -53,6 +55,7 @@ public class CommonController {
 
         return "redirect:/subHoliday/holidayDeptEmp.do";
     }
+    */
 
     @RequestMapping(value = "/common/fileDownload.do")
     public void fileDownload(@RequestParam Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -72,6 +75,8 @@ public class CommonController {
         commonService.fileDownLoad2(fileName, filePath, fileType, request, response);
     }
 
+    // TODO: MainLib 누락으로 전체 메서드 임시 주석
+    /*
     @RequestMapping(value = "/common/multiFileDownload.do")
     public void multiFileDownload(@RequestParam Map<String, Object> params, HttpServletResponse response, Model model) {
         MainLib mainLib = new MainLib();
@@ -81,6 +86,7 @@ public class CommonController {
 
         mainLib.multiFileDownload(result, dir, zipName, response);
     }
+    */
 
     @RequestMapping(value = "/common/commonFileDel.do")
     public String commonFileDel(@RequestParam Map<String, Object> params, HttpServletResponse response, Model model){
@@ -100,6 +106,8 @@ public class CommonController {
         return "jsonView";
     }
 
+    // TODO: MainLib 누락으로 전체 메서드 임시 주석
+    /*
     @RequestMapping(value = "/commFile/commFileUpLoad", method = RequestMethod.POST)
     public String commFileUpLoad(@RequestParam Map<String, Object> params, @RequestParam("file_name") MultipartFile[] file_name, Model model) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -117,4 +125,5 @@ public class CommonController {
 
         return "jsonView";
     }
+    */
 }
