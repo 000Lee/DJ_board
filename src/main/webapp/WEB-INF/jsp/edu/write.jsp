@@ -58,6 +58,18 @@
             <small style="color: #666; font-size: 12px;">※ 비밀글로 설정하면 작성자 외에는 비밀번호를 입력해야 볼 수 있습니다.</small>
         </div>
         
+        <!-- 관리자만 공지사항 설정 가능 -->
+        <c:if test="${loginUser.isAdmin}">
+            <div class="form-group">
+                <label style="color: #ff6b6b;">
+                    <input type="checkbox" id="isNoticeCheck" onchange="toggleNotice()">
+                    🔔 공지사항으로 등록
+                </label>
+                <input type="hidden" id="isNotice" name="isNotice" value="false">
+                <small style="color: #666; font-size: 12px;">※ 공지사항은 게시판 상단에 고정됩니다.</small>
+            </div>
+        </c:if>
+        
         <div class="form-group">
             <button type="submit" class="btn">등록</button>
             <a href="/edu/start.do" class="btn btn-secondary" style="text-decoration: none; margin-left: 10px;">목록</a>
@@ -80,6 +92,17 @@
                 passwordInput.required = false;
                 passwordInput.value = '';
                 hiddenField.value = 'false';  // hidden field를 false로 변경
+            }
+        }
+        
+        function toggleNotice() {
+            var checkbox = document.getElementById('isNoticeCheck');
+            var hiddenField = document.getElementById('isNotice');
+            
+            if (checkbox.checked) {
+                hiddenField.value = 'true';
+            } else {
+                hiddenField.value = 'false';
             }
         }
     </script>

@@ -7,7 +7,7 @@ import java.util.List;
 public interface TestService {
     List<EduBoardVO> getList();
     List<EduBoardVO> getListWithPaging(PagingVO paging);
-    int getTotalCount();
+    int getTotalCount(PagingVO paging);
     EduBoardVO getDetail(Long id);
     void insert(EduBoardVO vo);
     void update(EduBoardVO vo);

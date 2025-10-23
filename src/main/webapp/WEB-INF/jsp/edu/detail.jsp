@@ -57,7 +57,15 @@
         </div>
         
         <div class="detail-header">
-            <div class="detail-title">${board.title}</div>
+            <c:if test="${board.isNotice}">
+                <div style="background: #fff8dc; border-left: 4px solid #ff6b6b; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                    <span style="color: #ff6b6b; font-weight: bold; font-size: 14px;">🔔 공지사항</span>
+                </div>
+            </c:if>
+            <div class="detail-title">
+                <c:if test="${board.isNotice}"><span style="color: #ff6b6b;">[공지]</span> </c:if>
+                ${board.title}
+            </div>
             <div class="detail-meta">
                 <span>작성자: ${board.writer}</span>
                 <span>작성일: <fmt:formatDate value="${board.createdAt}" pattern="yyyy-MM-dd HH:mm"/></span>

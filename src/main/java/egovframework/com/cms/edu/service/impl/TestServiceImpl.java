@@ -26,8 +26,8 @@ public class TestServiceImpl implements TestService {
     }
     
     @Override
-    public int getTotalCount() {
-        return eduBoardDAO.selectTotalCount();
+    public int getTotalCount(PagingVO paging) {
+        return eduBoardDAO.selectTotalCount(paging);
     }
     
     @Override

@@ -29,20 +29,30 @@ public class TestController {
     @Resource(name = "commentService")
     private CommentService commentService;
 
-    // 게시판 목록 (페이징 적용)
+    // 게시판 목록 (페이징, 정렬, 검색 적용)
     @RequestMapping("/start.do")
-    public String list(@RequestParam(value = "page", defaultValue = "1") int page, Model model, HttpSession session) {
+    public String list(@RequestParam(value = "page", defaultValue = "1") int page, 
+                      @RequestParam(value = "sortType", defaultValue = "latest") String sortType,
+                      @RequestParam(value = "searchType", defaultValue = "titleContent") String searchType,
+                      @RequestParam(value = "searchKeyword", defaultValue = "") String searchKeyword,
+                      Model model, HttpSession session) {
         try {
             // 페이징 정보 생성 (페이지당 10개씩)
             PagingVO paging = new PagingVO(page, 10);
+            paging.setSortType(sortType);           // 정렬 타입 설정
+            paging.setSearchType(searchType);       // 검색 타입 설정
+            paging.setSearchKeyword(searchKeyword); // 검색 키워드 설정
             
-            // 전체 게시글 수 조회
-            int totalCount = testService.getTotalCount();
+            // 전체 게시글 수 조회 (검색 조건 포함)
+            int totalCount = testService.getTotalCount(paging);
             paging.setTotalCount(totalCount);
             
             // 페이징된 게시글 목록 조회
             model.addAttribute("boards", testService.getListWithPaging(paging));
             model.addAttribute("paging", paging);
+            model.addAttribute("sortType", sortType);         // JSP에서 사용할 정렬 타입 전달
+            model.addAttribute("searchType", searchType);     // JSP에서 사용할 검색 타입 전달
+            model.addAttribute("searchKeyword", searchKeyword); // JSP에서 사용할 검색 키워드 전달
             
             return "edu/index";
         } catch (Exception e) {
@@ -180,6 +190,7 @@ public class TestController {
             }
             
             model.addAttribute("board", board);
+            model.addAttribute("loginUser", loginUser);
             return "edu/edit";
         } catch (Exception e) {
             e.printStackTrace();

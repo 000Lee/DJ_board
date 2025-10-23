@@ -13,4 +13,5 @@ public class EduBoardVO {
     private Integer views;
     private Boolean isSecret;       // 비밀글 여부
     private String secretPassword;  // 비밀글 비밀번호
+    private Boolean isNotice;       // 공지사항 여부
 }

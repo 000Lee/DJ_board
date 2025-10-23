@@ -16,6 +16,11 @@ public class PagingVO {
     private int offset;               // SQL OFFSET 값
     
     private int pageGroupSize = 10;   // 페이징 네비게이션에 표시할 페이지 수
+    private String sortType = "latest"; // 정렬 타입 (latest: 최신순, views: 조회수순)
+    
+    // 검색 조건
+    private String searchType = "titleContent"; // 검색 타입 (title: 제목, titleContent: 제목+내용, writer: 작성자)
+    private String searchKeyword = "";          // 검색 키워드
     
     public PagingVO() {
     }

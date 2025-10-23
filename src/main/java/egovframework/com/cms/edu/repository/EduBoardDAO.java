@@ -31,10 +31,10 @@ public class EduBoardDAO {
     }
 
     /**
-     * 전체 게시글 수 조회
+     * 전체 게시글 수 조회 (검색 조건 포함)
      */
-    public int selectTotalCount() {
-        return sqlSession.selectOne(NAMESPACE + ".selectTotalCount");
+    public int selectTotalCount(PagingVO paging) {
+        return sqlSession.selectOne(NAMESPACE + ".selectTotalCount", paging);
     }
 
     /**
