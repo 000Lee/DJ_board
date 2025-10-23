@@ -74,12 +74,24 @@ function changeSortType(sortType) {
             </tr>
             </thead>
             <tbody>
+            <!-- 현재 페이지의 공지사항 개수 카운트 -->
+            <c:set var="noticeCount" value="0"/>
+            <c:forEach var="b" items="${boards}">
+                <c:if test="${b.isNotice}">
+                    <c:set var="noticeCount" value="${noticeCount + 1}"/>
+                </c:if>
+            </c:forEach>
+            
+            <!-- 공지사항 인덱스 초기화 -->
+            <c:set var="noticeIndex" value="0"/>
             <c:forEach var="b" items="${boards}" varStatus="status">
                 <tr style="${b.isNotice ? 'background-color: #fff8dc;' : ''}">
                     <td>
                         <c:choose>
                             <c:when test="${b.isNotice}">
-                                <span style="color: #ff6b6b; font-weight: bold;">공지</span>
+                                <!-- 0부터 시작하는 인덱스로 번호 계산 -->
+                                <span style="color: #ff6b6b; font-weight: bold;">${noticeCount - noticeIndex}</span>
+                                <c:set var="noticeIndex" value="${noticeIndex + 1}"/>
                             </c:when>
                             <c:otherwise>
                                 ${paging.totalCount - (paging.currentPage - 1) * paging.pageSize - status.index}
