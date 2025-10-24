@@ -46,32 +46,45 @@
                 <textarea id="content" name="content" required>${board.content}</textarea>
             </div>
             
+            <!-- 게시글 유형 선택 (라디오 버튼) -->
             <div class="form-group">
-                <label>
-                    <input type="checkbox" id="isSecretCheck" <c:if test="${board.isSecret}">checked</c:if> onchange="toggleSecretPassword()">
-                    비밀글로 설정
-                </label>
-                <!-- hidden field: 체크되면 true, 아니면 false -->
+                <label>게시글 유형</label>
+                <div style="margin-top: 10px;">
+                    <label style="display: inline-block; margin-right: 20px; font-weight: normal;">
+                        <input type="radio" name="postType" value="normal" 
+                               <c:if test="${!board.isSecret && !board.isNotice}">checked</c:if> 
+                               onchange="handlePostTypeChange()">
+                        일반글
+                    </label>
+                    <label style="display: inline-block; margin-right: 20px; font-weight: normal;">
+                        <input type="radio" name="postType" value="secret" 
+                               <c:if test="${board.isSecret}">checked</c:if> 
+                               onchange="handlePostTypeChange()">
+                        🔒 비밀글
+                    </label>
+                    <c:if test="${loginUser.isAdmin}">
+                        <label style="display: inline-block; font-weight: normal; color: #ff6b6b;">
+                            <input type="radio" name="postType" value="notice" 
+                                   <c:if test="${board.isNotice}">checked</c:if> 
+                                   onchange="handlePostTypeChange()">
+                            🔔 공지사항
+                        </label>
+                    </c:if>
+                </div>
+                <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                    ※ 비밀글: 비밀번호 입력 필요 / 공지사항: 게시판 상단 고정 (관리자만)
+                </small>
+                <!-- hidden fields: 백엔드에서 사용 -->
                 <input type="hidden" id="isSecret" name="isSecret" value="${board.isSecret ? 'true' : 'false'}">
+                <input type="hidden" id="isNotice" name="isNotice" value="${board.isNotice ? 'true' : 'false'}">
             </div>
             
+            <!-- 비밀글 선택 시만 표시되는 비밀번호 입력란 -->
             <div class="form-group" id="secretPasswordDiv" style="display: none;">
                 <label for="secretPassword">비밀번호 (4자리 이상)</label>
                 <input type="password" id="secretPassword" name="secretPassword" minlength="4" placeholder="비밀번호를 입력하세요 (변경하지 않으려면 비워두세요)">
                 <small style="color: #666; font-size: 12px;">※ 비밀번호를 변경하지 않으려면 비워두세요.</small>
             </div>
-            
-            <!-- 관리자만 공지사항 설정 가능 -->
-            <c:if test="${loginUser.isAdmin}">
-                <div class="form-group">
-                    <label style="color: #ff6b6b;">
-                        <input type="checkbox" id="isNoticeCheck" <c:if test="${board.isNotice}">checked</c:if> onchange="toggleNotice()">
-                        🔔 공지사항으로 등록
-                    </label>
-                    <input type="hidden" id="isNotice" name="isNotice" value="${board.isNotice ? 'true' : 'false'}">
-                    <small style="color: #666; font-size: 12px;">※ 공지사항은 게시판 상단에 고정됩니다.</small>
-                </div>
-            </c:if>
             
             <!-- 기존 파일 정보 (다중 파일) -->
             <c:if test="${not empty files}">
@@ -108,40 +121,42 @@
         </form>
         
         <script>
-            // 페이지 로드 시 비밀글 상태 확인
+            // 페이지 로드 시 초기 상태 설정
             window.onload = function() {
-                var checkbox = document.getElementById('isSecretCheck');
+                var checkedRadio = document.querySelector('input[name="postType"]:checked');
                 var passwordDiv = document.getElementById('secretPasswordDiv');
                 
-                if (checkbox.checked) {
+                // 비밀글인 경우 비밀번호 입력란 표시
+                if (checkedRadio && checkedRadio.value === 'secret') {
                     passwordDiv.style.display = 'block';
                 }
             };
             
-            function toggleSecretPassword() {
-                var checkbox = document.getElementById('isSecretCheck');
-                var hiddenField = document.getElementById('isSecret');
+            // 게시글 유형 변경 핸들러
+            function handlePostTypeChange() {
+                var postType = document.querySelector('input[name="postType"]:checked').value;
                 var passwordDiv = document.getElementById('secretPasswordDiv');
                 var passwordInput = document.getElementById('secretPassword');
+                var isSecretField = document.getElementById('isSecret');
+                var isNoticeField = document.getElementById('isNotice');
                 
-                if (checkbox.checked) {
+                // 모든 hidden field 초기화
+                isSecretField.value = 'false';
+                isNoticeField.value = 'false';
+                
+                if (postType === 'secret') {
+                    // 비밀글 선택
                     passwordDiv.style.display = 'block';
-                    hiddenField.value = 'true';  // hidden field를 true로 변경
-                } else {
+                    isSecretField.value = 'true';
+                } else if (postType === 'notice') {
+                    // 공지사항 선택
                     passwordDiv.style.display = 'none';
                     passwordInput.value = '';
-                    hiddenField.value = 'false';  // hidden field를 false로 변경
-                }
-            }
-            
-            function toggleNotice() {
-                var checkbox = document.getElementById('isNoticeCheck');
-                var hiddenField = document.getElementById('isNotice');
-                
-                if (checkbox.checked) {
-                    hiddenField.value = 'true';
+                    isNoticeField.value = 'true';
                 } else {
-                    hiddenField.value = 'false';
+                    // 일반글 선택
+                    passwordDiv.style.display = 'none';
+                    passwordInput.value = '';
                 }
             }
         </script>

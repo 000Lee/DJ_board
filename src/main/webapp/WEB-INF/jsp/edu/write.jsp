@@ -43,32 +43,39 @@
             <textarea id="content" name="content" required></textarea>
         </div>
         
+        <!-- 게시글 유형 선택 (라디오 버튼) -->
         <div class="form-group">
-            <label>
-                <input type="checkbox" id="isSecretCheck" onchange="toggleSecretPassword()">
-                비밀글로 설정
-            </label>
-            <!-- hidden field: 체크되면 true, 아니면 false -->
+            <label>게시글 유형</label>
+            <div style="margin-top: 10px;">
+                <label style="display: inline-block; margin-right: 20px; font-weight: normal;">
+                    <input type="radio" name="postType" value="normal" checked onchange="handlePostTypeChange()">
+                    일반글
+                </label>
+                <label style="display: inline-block; margin-right: 20px; font-weight: normal;">
+                    <input type="radio" name="postType" value="secret" onchange="handlePostTypeChange()">
+                    🔒 비밀글
+                </label>
+                <c:if test="${loginUser.isAdmin}">
+                    <label style="display: inline-block; font-weight: normal; color: #ff6b6b;">
+                        <input type="radio" name="postType" value="notice" onchange="handlePostTypeChange()">
+                        🔔 공지사항
+                    </label>
+                </c:if>
+            </div>
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                ※ 비밀글: 비밀번호 입력 필요 / 공지사항: 게시판 상단 고정 (관리자만)
+            </small>
+            <!-- hidden fields: 백엔드에서 사용 -->
             <input type="hidden" id="isSecret" name="isSecret" value="false">
+            <input type="hidden" id="isNotice" name="isNotice" value="false">
         </div>
         
+        <!-- 비밀글 선택 시만 표시되는 비밀번호 입력란 -->
         <div class="form-group" id="secretPasswordDiv" style="display: none;">
             <label for="secretPassword">비밀번호 (4자리 이상)</label>
             <input type="password" id="secretPassword" name="secretPassword" minlength="4" placeholder="비밀번호를 입력하세요">
-            <small style="color: #666; font-size: 12px;">※ 비밀글로 설정하면 작성자 외에는 비밀번호를 입력해야 볼 수 있습니다.</small>
+            <small style="color: #666; font-size: 12px;">※ 작성자 외에는 비밀번호를 입력해야 볼 수 있습니다.</small>
         </div>
-        
-        <!-- 관리자만 공지사항 설정 가능 -->
-        <c:if test="${loginUser.isAdmin}">
-            <div class="form-group">
-                <label style="color: #ff6b6b;">
-                    <input type="checkbox" id="isNoticeCheck" onchange="toggleNotice()">
-                    🔔 공지사항으로 등록
-                </label>
-                <input type="hidden" id="isNotice" name="isNotice" value="false">
-                <small style="color: #666; font-size: 12px;">※ 공지사항은 게시판 상단에 고정됩니다.</small>
-            </div>
-        </c:if>
         
         <!-- 파일 첨부 (다중 파일) -->
         <div class="form-group">
@@ -84,32 +91,34 @@
     </form>
     
     <script>
-        function toggleSecretPassword() {
-            var checkbox = document.getElementById('isSecretCheck');
-            var hiddenField = document.getElementById('isSecret');
+        // 게시글 유형 변경 핸들러
+        function handlePostTypeChange() {
+            var postType = document.querySelector('input[name="postType"]:checked').value;
             var passwordDiv = document.getElementById('secretPasswordDiv');
             var passwordInput = document.getElementById('secretPassword');
+            var isSecretField = document.getElementById('isSecret');
+            var isNoticeField = document.getElementById('isNotice');
             
-            if (checkbox.checked) {
+            // 모든 hidden field 초기화
+            isSecretField.value = 'false';
+            isNoticeField.value = 'false';
+            
+            if (postType === 'secret') {
+                // 비밀글 선택
                 passwordDiv.style.display = 'block';
                 passwordInput.required = true;
-                hiddenField.value = 'true';  // hidden field를 true로 변경
-            } else {
+                isSecretField.value = 'true';
+            } else if (postType === 'notice') {
+                // 공지사항 선택
                 passwordDiv.style.display = 'none';
                 passwordInput.required = false;
                 passwordInput.value = '';
-                hiddenField.value = 'false';  // hidden field를 false로 변경
-            }
-        }
-        
-        function toggleNotice() {
-            var checkbox = document.getElementById('isNoticeCheck');
-            var hiddenField = document.getElementById('isNotice');
-            
-            if (checkbox.checked) {
-                hiddenField.value = 'true';
+                isNoticeField.value = 'true';
             } else {
-                hiddenField.value = 'false';
+                // 일반글 선택
+                passwordDiv.style.display = 'none';
+                passwordInput.required = false;
+                passwordInput.value = '';
             }
         }
     </script>
