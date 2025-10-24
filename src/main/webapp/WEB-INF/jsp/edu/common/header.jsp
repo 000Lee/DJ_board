@@ -1,21 +1,26 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style>
-    .edu-top-bar {
+    .edu-top-bar{
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 40px;
+        height: 50px;
         background: #007bff;
         z-index: 9999;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+    }
+    .edu-right {
+
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        padding-right: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-left: auto;
     }
-    
+
     .edu-login-btn {
         background: white;
         color: #007bff;
@@ -31,18 +36,18 @@
         transition: all 0.3s ease;
 
     }
-    
+
     .edu-login-btn:hover {
         background: #f8f9fa;
         transform: translateY(-1px);
     }
-    
+
     .edu-user-info {
         color: white;
         font-size: 12px;
         margin-right: 15px;
     }
-    
+
     .edu-admin-badge {
         background: #ffc107;
         color: #000;
@@ -54,7 +59,7 @@
         display: inline-block;
         /* animation: pulse 2s infinite; */
     }
-    
+
     /* @keyframes pulse {
         0% { transform: scale(1); }
         50% { transform: scale(1.05); }
@@ -75,12 +80,12 @@
         font-weight: bold;
         transition: all 0.3s ease;
     }
-    
+
     .edu-logout-btn:hover {
         background: #f8f9fa;
         transform: translateY(-1px);
     }
-    
+
     .edu-withdraw-btn {
         background: #dc3545;
         color: white;
@@ -95,19 +100,29 @@
         font-weight: bold;
         transition: all 0.3s ease;
     }
-    
+
     .edu-withdraw-btn:hover {
         background: #c82333;
         transform: translateY(-1px);
     }
-    
+
+    .edu-home-link{
+        font-size: 24px;
+        font-weight: lighter;
+        color: white;
+        margin-left: 20px;
+        text-decoration:none;
+    }
     /* body에 padding-top 추가해서 헤더와 겹치지 않게 */
     body {
         padding-top: 50px;
+
     }
 </style>
-
 <div class="edu-top-bar">
+    <a href="/edu/start.do" class="edu-home-link">BOARD</a>
+<div class="edu-right">
+
     <c:choose>
         <c:when test="${not empty sessionScope.loginUser}">
             <span class="edu-user-info">
@@ -123,5 +138,6 @@
             <a href="/edu/login.do" class="edu-login-btn">로그인</a>
         </c:otherwise>
     </c:choose>
+</div>
 </div>
 

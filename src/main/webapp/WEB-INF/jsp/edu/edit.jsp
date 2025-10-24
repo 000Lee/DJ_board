@@ -60,23 +60,30 @@
                         <input type="radio" name="postType" value="secret" 
                                <c:if test="${board.isSecret}">checked</c:if> 
                                onchange="handlePostTypeChange()">
-                        🔒 비밀글
+                         비밀글
                     </label>
                     <c:if test="${loginUser.isAdmin}">
-                        <label style="display: inline-block; font-weight: normal; color: #ff6b6b;">
+                        <label style="display: inline-block; margin-right: 20px; font-weight: normal; color: #ffa500;">
                             <input type="radio" name="postType" value="notice" 
-                                   <c:if test="${board.isNotice}">checked</c:if> 
+                                   <c:if test="${board.isNotice && !board.isImportant}">checked</c:if> 
                                    onchange="handlePostTypeChange()">
-                            🔔 공지사항
+                             공지사항
+                        </label>
+                        <label style="display: inline-block; font-weight: normal; color: #ff6b6b;">
+                            <input type="radio" name="postType" value="important" 
+                                   <c:if test="${board.isNotice && board.isImportant}">checked</c:if> 
+                                   onchange="handlePostTypeChange()">
+                             중요 공지
                         </label>
                     </c:if>
                 </div>
                 <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
-                    ※ 비밀글: 비밀번호 입력 필요 / 공지사항: 게시판 상단 고정 (관리자만)
+                    ※ 비밀글: 비밀번호 필요 / 공지사항: 공지 탭에 표시 / 중요 공지: 일반게시판 상단 고정 (최대 2개)
                 </small>
                 <!-- hidden fields: 백엔드에서 사용 -->
                 <input type="hidden" id="isSecret" name="isSecret" value="${board.isSecret ? 'true' : 'false'}">
                 <input type="hidden" id="isNotice" name="isNotice" value="${board.isNotice ? 'true' : 'false'}">
+                <input type="hidden" id="isImportant" name="isImportant" value="${board.isImportant ? 'true' : 'false'}">
             </div>
             
             <!-- 비밀글 선택 시만 표시되는 비밀번호 입력란 -->
@@ -139,20 +146,28 @@
                 var passwordInput = document.getElementById('secretPassword');
                 var isSecretField = document.getElementById('isSecret');
                 var isNoticeField = document.getElementById('isNotice');
+                var isImportantField = document.getElementById('isImportant');
                 
                 // 모든 hidden field 초기화
                 isSecretField.value = 'false';
                 isNoticeField.value = 'false';
+                isImportantField.value = 'false';
                 
                 if (postType === 'secret') {
                     // 비밀글 선택
                     passwordDiv.style.display = 'block';
                     isSecretField.value = 'true';
                 } else if (postType === 'notice') {
-                    // 공지사항 선택
+                    // 일반 공지사항 선택
                     passwordDiv.style.display = 'none';
                     passwordInput.value = '';
                     isNoticeField.value = 'true';
+                } else if (postType === 'important') {
+                    // 중요 공지사항 선택
+                    passwordDiv.style.display = 'none';
+                    passwordInput.value = '';
+                    isNoticeField.value = 'true';
+                    isImportantField.value = 'true';
                 } else {
                     // 일반글 선택
                     passwordDiv.style.display = 'none';

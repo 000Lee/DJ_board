@@ -40,12 +40,13 @@ public class TestController {
     @Resource
     private FileUtil fileUtil;
 
-    // 게시판 목록 (페이징, 정렬, 검색 적용)
+    // 게시판 목록 (페이징, 정렬, 검색, 탭 적용)
     @RequestMapping("/start.do")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page, 
                       @RequestParam(value = "sortType", defaultValue = "latest") String sortType,
                       @RequestParam(value = "searchType", defaultValue = "titleContent") String searchType,
                       @RequestParam(value = "searchKeyword", defaultValue = "") String searchKeyword,
+                      @RequestParam(value = "tab", defaultValue = "board") String tab,
                       Model model, HttpSession session) {
         try {
             // 페이징 정보 생성 (페이지당 10개씩)
@@ -53,6 +54,7 @@ public class TestController {
             paging.setSortType(sortType);           // 정렬 타입 설정
             paging.setSearchType(searchType);       // 검색 타입 설정
             paging.setSearchKeyword(searchKeyword); // 검색 키워드 설정
+            paging.setTab(tab);                     // 탭 설정
             
             // 전체 게시글 수 조회 (검색 조건 포함)
             int totalCount = testService.getTotalCount(paging);

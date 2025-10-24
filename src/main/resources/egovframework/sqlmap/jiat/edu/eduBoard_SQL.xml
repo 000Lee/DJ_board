@@ -13,9 +13,11 @@
             views,
             is_secret as isSecret,
             secret_password as secretPassword,
-            is_notice as isNotice
+            is_notice as isNotice,
+            is_important as isImportant
         FROM edu_board
         ORDER BY 
+            is_important DESC,
             is_notice DESC,
         <choose>
             <when test="sortType == 'views'">
@@ -30,52 +32,160 @@
     <!-- 게시글 목록 조회 (페이징) -->
     <select id="selectListWithPaging" parameterType="egovframework.com.cms.edu.model.PagingVO" 
             resultType="egovframework.com.cms.edu.model.EduBoardVO">
-        SELECT 
-            id,
-            title,
-            content,
-            writer,
-            created_at as createdAt,
-            views,
-            is_secret as isSecret,
-            secret_password as secretPassword,
-            is_notice as isNotice
-        FROM edu_board
-        <where>
-            <if test="searchKeyword != null and searchKeyword != ''">
+        <choose>
+            <when test="tab == 'notice'">
+                <!-- 공지사항 탭: 모든 공지사항 표시 -->
+                SELECT 
+                    id,
+                    title,
+                    content,
+                    writer,
+                    created_at as createdAt,
+                    views,
+                    is_secret as isSecret,
+                    secret_password as secretPassword,
+                    is_notice as isNotice,
+                    is_important as isImportant
+                FROM edu_board
+                <where>
+                    is_notice = true
+                    <if test="searchKeyword != null and searchKeyword != ''">
+                        <choose>
+                            <when test="searchType == 'title'">
+                                AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+                            </when>
+                            <when test="searchType == 'writer'">
+                                AND writer LIKE CONCAT('%', #{searchKeyword}, '%')
+                            </when>
+                            <otherwise>
+                                <!-- titleContent 또는 기본값 -->
+                                AND (title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                                     OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
+                            </otherwise>
+                        </choose>
+                    </if>
+                </where>
+                ORDER BY 
+                    is_important DESC,
                 <choose>
-                    <when test="searchType == 'title'">
-                        AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-                    </when>
-                    <when test="searchType == 'writer'">
-                        AND writer LIKE CONCAT('%', #{searchKeyword}, '%')
+                    <when test="sortType == 'views'">
+                        views DESC, created_at DESC
                     </when>
                     <otherwise>
-                        <!-- titleContent 또는 기본값 -->
-                        AND (title LIKE CONCAT('%', #{searchKeyword}, '%') 
-                             OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
+                        created_at DESC
                     </otherwise>
                 </choose>
-            </if>
-        </where>
-        ORDER BY 
-            is_notice DESC,
-        <choose>
-            <when test="sortType == 'views'">
-                views DESC, created_at DESC
+                LIMIT #{pageSize} OFFSET #{offset}
             </when>
             <otherwise>
-                created_at DESC
+                <!-- 일반게시판 탭: 모든 페이지 상단에 중요 공지 최대 2개 고정 -->
+                (
+                    <!-- 중요 공지 최대 2개 (모든 페이지 상단 고정) -->
+                    SELECT 
+                        id,
+                        title,
+                        content,
+                        writer,
+                        created_at as createdAt,
+                        views,
+                        is_secret as isSecret,
+                        secret_password as secretPassword,
+                        is_notice as isNotice,
+                        is_important as isImportant,
+                        1 as post_order
+                    FROM edu_board
+                    <where>
+                        is_important = true
+                        <if test="searchKeyword != null and searchKeyword != ''">
+                            <choose>
+                                <when test="searchType == 'title'">
+                                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+                                </when>
+                                <when test="searchType == 'writer'">
+                                    AND writer LIKE CONCAT('%', #{searchKeyword}, '%')
+                                </when>
+                                <otherwise>
+                                    AND (title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                                         OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
+                                </otherwise>
+                            </choose>
+                        </if>
+                    </where>
+                    ORDER BY created_at DESC
+                    LIMIT 2
+                )
+                UNION ALL
+                (
+                    <!-- 일반글 (페이징 적용) -->
+                    SELECT 
+                        id,
+                        title,
+                        content,
+                        writer,
+                        created_at as createdAt,
+                        views,
+                        is_secret as isSecret,
+                        secret_password as secretPassword,
+                        is_notice as isNotice,
+                        is_important as isImportant,
+                        2 as post_order
+                    FROM edu_board
+                    <where>
+                        is_notice = false
+                        <if test="searchKeyword != null and searchKeyword != ''">
+                            <choose>
+                                <when test="searchType == 'title'">
+                                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+                                </when>
+                                <when test="searchType == 'writer'">
+                                    AND writer LIKE CONCAT('%', #{searchKeyword}, '%')
+                                </when>
+                                <otherwise>
+                                    AND (title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                                         OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
+                                </otherwise>
+                            </choose>
+                        </if>
+                    </where>
+                    ORDER BY 
+                    <choose>
+                        <when test="sortType == 'views'">
+                            views DESC, created_at DESC
+                        </when>
+                        <otherwise>
+                            created_at DESC
+                        </otherwise>
+                    </choose>
+                    LIMIT #{pageSize} OFFSET #{offset}
+                )
+                ORDER BY post_order, 
+                <choose>
+                    <when test="sortType == 'views'">
+                        views DESC, createdAt DESC
+                    </when>
+                    <otherwise>
+                        createdAt DESC
+                    </otherwise>
+                </choose>
             </otherwise>
         </choose>
-        LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <!-- 전체 게시글 수 조회 -->
+    <!-- 전체 게시글 수 조회 (탭별 필터링 적용) -->
     <select id="selectTotalCount" parameterType="egovframework.com.cms.edu.model.PagingVO" resultType="int">
         SELECT COUNT(*) 
         FROM edu_board
         <where>
+            <choose>
+                <when test="tab == 'notice'">
+                    <!-- 공지사항 탭: 공지사항만 카운트 -->
+                    is_notice = true
+                </when>
+                <otherwise>
+                    <!-- 일반게시판 탭: 일반글만 카운트 (중요 공지는 항상 상단 고정이므로 제외) -->
+                    is_notice = false
+                </otherwise>
+            </choose>
             <if test="searchKeyword != null and searchKeyword != ''">
                 <choose>
                     <when test="searchType == 'title'">
@@ -105,7 +215,8 @@
             views,
             is_secret as isSecret,
             secret_password as secretPassword,
-            is_notice as isNotice
+            is_notice as isNotice,
+            is_important as isImportant
         FROM edu_board
         WHERE id = #{id}
     </select>
@@ -120,7 +231,8 @@
             views,
             is_secret,
             secret_password,
-            is_notice
+            is_notice,
+            is_important
         ) VALUES (
             #{title},
             #{content},
@@ -129,7 +241,8 @@
             0,
             #{isSecret},
             #{secretPassword},
-            #{isNotice}
+            #{isNotice},
+            #{isImportant}
         )
     </insert>
 
@@ -142,7 +255,8 @@
             writer = #{writer},
             is_secret = #{isSecret},
             secret_password = #{secretPassword},
-            is_notice = #{isNotice}
+            is_notice = #{isNotice},
+            is_important = #{isImportant}
         WHERE id = #{id}
     </update>
 
@@ -170,7 +284,8 @@
             views,
             is_secret as isSecret,
             secret_password as secretPassword,
-            is_notice as isNotice
+            is_notice as isNotice,
+            is_important as isImportant
         FROM edu_board
         WHERE id &lt; #{id}
         ORDER BY id DESC
@@ -188,7 +303,8 @@
             views,
             is_secret as isSecret,
             secret_password as secretPassword,
-            is_notice as isNotice
+            is_notice as isNotice,
+            is_important as isImportant
         FROM edu_board
         WHERE id &gt; #{id}
         ORDER BY id ASC

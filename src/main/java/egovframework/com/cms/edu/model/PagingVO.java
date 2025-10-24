@@ -22,6 +22,9 @@ public class PagingVO {
     private String searchType = "titleContent"; // 검색 타입 (title: 제목, titleContent: 제목+내용, writer: 작성자)
     private String searchKeyword = "";          // 검색 키워드
     
+    // 탭 구분
+    private String tab = "board";               // 탭 (board: 일반게시판, notice: 공지사항)
+    
     public PagingVO() {
     }
     

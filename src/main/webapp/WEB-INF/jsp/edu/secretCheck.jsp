@@ -153,7 +153,7 @@
 <!-- 모달 배경 + 모달창 -->
 <div class="modal-overlay">
     <div class="modal-container">
-        <div class="lock-icon">🔒</div>
+        <div class="lock-icon"></div>
         <h2>비밀글입니다</h2>
         <p class="subtitle">비밀번호를 입력해주세요</p>
         

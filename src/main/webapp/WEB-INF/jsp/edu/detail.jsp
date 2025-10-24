@@ -39,7 +39,7 @@
         <div class="nav-buttons">
             <c:choose>
                 <c:when test="${not empty prevPost}">
-                    <a href="/edu/detail.do?id=${prevPost.id}" class="nav-btn">← 이전글</a>
+                    <a href="/edu/detail.do?id=${prevPost.id}&returnTab=${empty param.returnTab ? 'board' : param.returnTab}" class="nav-btn">← 이전글</a>
                 </c:when>
                 <c:otherwise>
                     <span class="nav-btn disabled">← 이전글</span>
@@ -48,7 +48,7 @@
             
             <c:choose>
                 <c:when test="${not empty nextPost}">
-                    <a href="/edu/detail.do?id=${nextPost.id}" class="nav-btn">다음글 →</a>
+                    <a href="/edu/detail.do?id=${nextPost.id}&returnTab=${empty param.returnTab ? 'board' : param.returnTab}" class="nav-btn">다음글 →</a>
                 </c:when>
                 <c:otherwise>
                     <span class="nav-btn disabled">다음글 →</span>
@@ -58,12 +58,18 @@
         
         <div class="detail-header">
             <c:if test="${board.isNotice}">
-                <div style="background: #fff8dc; border-left: 4px solid #ff6b6b; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-                    <span style="color: #ff6b6b; font-weight: bold; font-size: 14px;">🔔 공지사항</span>
+                <div style="background: #fff8dc; border-left: 4px solid ${board.isImportant ? '#ff6b6b' : '#ffa500'}; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                    <span style="color: ${board.isImportant ? '#ff6b6b' : '#ffa500'}; font-weight: bold; font-size: 14px;">
+                        <c:choose>
+                            <c:when test="${board.isImportant}"> 중요 공지사항</c:when>
+                            <c:otherwise> 공지사항</c:otherwise>
+                        </c:choose>
+                    </span>
                 </div>
             </c:if>
             <div class="detail-title">
-                <c:if test="${board.isNotice}"><span style="color: #ff6b6b;">[공지]</span> </c:if>
+                <c:if test="${board.isImportant}"><span style="color: #ff6b6b;">[중요]</span> </c:if>
+                <c:if test="${board.isNotice && !board.isImportant}"><span style="color: #ffa500;">[공지]</span> </c:if>
                 ${board.title}
             </div>
             <div class="detail-meta">
@@ -103,7 +109,7 @@ ${board.content}
                 <a href="/edu/edit.do?id=${board.id}" class="btn">수정</a>
                 <a href="/edu/delete.do?id=${board.id}" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
             </c:if>
-            <a href="/edu/start.do" class="btn btn-secondary">목록</a>
+            <a href="/edu/start.do?tab=${empty param.returnTab ? 'board' : param.returnTab}" class="btn btn-secondary">목록</a>
         </div>
         
         <!-- 댓글 영역 -->
